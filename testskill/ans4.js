@@ -95,7 +95,7 @@ const compare_id = (a, b) =>{
     }
 }
 const group = (temp) => {
-    let newData =  temp.reduce(function (r, a) {
+    let newData =  temp.reduce( function (r, a) {
         // console.log(r);
         
         r[find_index(a.year, a.id)] = r[find_index(a.year, a.id)] || [];
