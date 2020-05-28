@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
-import { Statistic, Col } from 'antd';
-import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
+import { Statistic, Col, Button } from 'antd';
+import { ArrowUpOutlined, ArrowDownOutlined, CaretUpOutlined } from '@ant-design/icons';
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, PieChart, Pie, Sector, Cell, } from 'recharts';
 import car1 from '../../assets/img/card/car1.png'
 import delivery1 from '../../assets/img/card/delivery1.png'
@@ -10,6 +10,9 @@ import car2 from '../../assets/img/card/car2.png'
 import delivery2 from '../../assets/img/card/delivery2.png'
 import parking2 from '../../assets/img/card/parking2.png'
 import vip2 from '../../assets/img/card/vip2.png'
+import price from '../../assets/img/icon/price.png'
+import car from '../../assets/img/icon/car.png'
+import parking from '../../assets/img/icon/parking.png'
 import {
   Card,
   CardBody,
@@ -49,6 +52,8 @@ const Dashboard = () => {
 
   return (
     <div className="animated fadeIn">
+
+      {/* //การ์ด */}
       <Row>
 
         <Col xs="12" sm="6" lg="4" md="6" >
@@ -109,37 +114,145 @@ const Dashboard = () => {
         </Col>
 
       </Row>
-      <Row>
-        <div className="animated fadeIn">
-          <CardColumns className="cols-2">
-            <Card id="frame">
-              <CardBody>
-                <h5>Statiscs</h5>
-                <div className="chart-wrapper" >
-                  <Statistic
-                    
-                    value={11.28}
-                    precision={2}
-                    valueStyle={{ color: '#1DAAFF' }}
-                    prefix={<ArrowUpOutlined />}
-                    suffix="%"
-                  />
-                
 
-                  <LineChart width={400} height={200} data={data}>
+      {/* กราฟ */}
+      <Row>
+      <Col xs="12" sm="6" lg="4" md="6" >
+          <Card   id="chrat1">
+           
+            <CardBody className="pb-0">
+            <h4>Statiscs</h4>
+                <Statistic value={1893} className="satistic" />
+                <div className="price">
+                  <img src={price} className="price" />
+                  <spen  >{data[5].number}</spen>
+                  <spen>({data[4].number})</spen>
+                </div>
+              <LineChart width={900} height={200} data={data} className="ss">
                     <Line type="monotone" dataKey="number" stroke="#8884d8" />
                     <CartesianGrid stroke="#ccc" />
                     {/* <XAxis dataKey="time" />
                     <YAxis dataKey="number" /> */}
                   </LineChart>
+            </CardBody>
+          </Card>
+        </Col>
+
+        <Col xs="12" sm="6" lg="4" md="6" >
+          <Card  id="chrat2">
+           
+            <CardBody className="pb-0">
+            <h5>Real time</h5>
+                <small>{time}</small>
+                <div className="move">
+                  <spen >Movement</spen>
+                  <div>
+                    <img src={car} className="rtcar" />
+                    <spen id ="car" >{data2[0].value}</spen>
+                  </div>
+                  <div>
+                    <img src={parking} className="rtpark" />
+                    <spen id ="car">{data2[1].value}</spen>
+                  </div>
+                  
+                  
+                </div>
+                
+                <PieChart width={700} height={900} >
+                  
+                  <Pie
+                    data={data2}
+                    cx={120}
+                    cy={200}
+                    innerRadius={60}
+                    outerRadius={70}
+                    fill="#8884d8"
+                    paddingAngle={5}
+                    dataKey="value"
+                  >
+                    {
+                      data.map((entry, index) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)
+                    }
+                  </Pie>
+
+                </PieChart>
+                
+            </CardBody>
+          </Card>
+        </Col>
+
+
+        <Row>
+        <Col xs="12" sm="6" lg="4" md="6" >
+          <Card >
+           
+            <CardBody className="pb-0">
+            <h4>Statiscs</h4>
+                <Statistic value={1893}  />
+                <div className="price">
+                  <img src={price} className="price" />
+                  <spen  >{data[5].number}</spen>
+                  <spen>({data[4].number})</spen>
+                </div>  
+            </CardBody>
+          </Card>
+        </Col>
+          
+        <Col xs="12" sm="6" lg="4" md="6" >
+          <Card >
+           
+            <CardBody className="pb-0">
+            <h4>Statiscs</h4>
+                <Statistic value={1893}  />
+                <div className="price">
+                  <img src={price} className="price" />
+                  <spen  >{data[5].number}</spen>
+                  <spen>({data[4].number})</spen>
+                </div>
+            </CardBody>
+          </Card>
+        </Col>
+
+
+                      
+        </Row>
+
+
+
+        {/* <Col xs="12" sm="6" lg="4" md="6">
+          <Card className="text-white bg-primary" id="card">
+          </Card>
+        </Col>
+        <Col>
+        <div className="animated fadeIn">
+          <CardColumns className="cols-2">
+            <Card id="frame">
+              <CardBody>
+                <h4>Statiscs</h4>
+                <Statistic value={1893} className="satistic" />
+                <div className="price">
+                  <img src={price} className="price" />
+                  <spen  >{data[5].number}</spen>
+                  <spen>({data[4].number})</spen>
+                </div>
+
+
+
+                <div className="chart-wrapper" >
+                  <LineChart width={400} height={200} data={data}>
+                    <Line type="monotone" dataKey="number" stroke="#8884d8" />
+                    <CartesianGrid stroke="#ccc" />
+                    {/* <XAxis dataKey="time" />
+                    <YAxis dataKey="number" /> */}
+                  {/* </LineChart>
                 </div>
               </CardBody>
             </Card>
           </CardColumns>
         </div>
-      </Row>
+        </Col> */} 
 
-      <Row>
+        {/* <Col>
         <div className="animated fadeIn">
           <CardColumns className="cols-2">
             <Card id="frame">
@@ -167,9 +280,14 @@ const Dashboard = () => {
               </CardBody>
             </Card>
           </CardColumns>
-        </div>
+        </div>         
+        </Col> */}
+
+        
+       
       </Row>
 
+   
 
 
 
