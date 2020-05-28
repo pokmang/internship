@@ -1,12 +1,36 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 import Card from './component/card';
+import Nav from './component/nav';
+import { Layout } from 'antd';
+
+const { Header, Footer, Sider, Content } = Layout;
 
 function App() {
   return (
     <div className="App">
-      <Card />
+      <Layout>
+        <Sider>Sider
+
+        </Sider>
+        <Layout>
+          <Header>
+            
+            <Nav />
+          </Header>
+
+          <Content>
+            <Card />
+          </Content>
+
+          <Footer>
+            Footer
+          </Footer>
+
+        </Layout>
+      </Layout>
+
+
     </div>
   );
 }
