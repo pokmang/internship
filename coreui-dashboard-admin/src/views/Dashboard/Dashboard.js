@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Statistic, Col } from "antd";
 import { Line as LineA } from "react-chartjs-2";
-import {LineChart,Line,CartesianGrid,PieChart,Pie,Cell,RadialBarChart,RadialBar,Legend,} from "recharts";
+import { LineChart, Line, CartesianGrid, PieChart, Pie, Cell, RadialBarChart, RadialBar, Legend, } from "recharts";
 import car1 from "../../assets/img/card/car1.png";
 import delivery1 from "../../assets/img/card/delivery1.png";
 import parking1 from "../../assets/img/card/parking1.png";
@@ -13,32 +13,20 @@ import { Card, CardBody, Row } from "reactstrap";
 import "./card.css";
 import "./chart.css";
 import axios from "axios";
-
-
-var moment = require("moment"); // require
+var moment = require("moment");
 const time = moment().format("DD MMMM YYYY");
-//statisce
-const data1 = [
-  { name: "A", number: 1, time: 10.1 },
-  { name: "B", number: 1.2, time: 10.3 },
-  { name: "C", number: 1.3, time: 10.6 },
-  { name: "D", number: 3, time: 10.5 },
-];
 
-//realtime
 const data2 = [
   { name: "Group A", value: 45 },
   { name: "Group B", value: 300 },
 ];
-
 const data3 = [
-  { name: "car",        uv: 31.47,pv: 2400,fill: "#20A8D8"},
-  { name: "Car parking",uv: 26.69,pv: 4567,fill: "#FFC107"},
-  { name: "Car VIP",    uv: 15.69,pv: 1398,fill: "#F86C6B"},
+  { name: "car", uv: 31.47, pv: 2400, fill: "#20A8D8" },
+  { name: "Car parking", uv: 26.69, pv: 4567, fill: "#FFC107" },
+  { name: "Car VIP", uv: 15.69, pv: 1398, fill: "#F86C6B" },
 ];
-const style = {top: 15,left: 250,lineHeight: "24px",};
+const style = { top: 15, left: 250, lineHeight: "24px", };
 const COLORS = ["#63C2DE", "#20A8D8"];
-
 const data4 = {
   labels: ["10.00", "10.30", "11.30", "12.00", "12.02", "12.20"],
   datasets: [
@@ -63,11 +51,9 @@ const Dashboard = () => {
   const [realtime, setRealtime] = useState([]);
   const [data, setData] = useState([]);
   const [graph, setGraph] = useState([{}])
-
   useEffect(() => {
     getDashboard();
   }, []);
-
   const getDashboard = async () => {
     let dashboard = await axios.get("http://localhost:8000/dashboard/getDashboard");
     setDashboard(dashboard.data);
@@ -81,33 +67,25 @@ const Dashboard = () => {
   console.log("dashboard", dashboard);
   console.log("realtime", realtime);
   console.log("data", data);
-  console.log("graph",graph);
-  
+  console.log("graph", graph);
   const datagraph = []
-  console.log("test2",datagraph);
-  
   graph.forEach(deta => {
     const newData = {}
     newData.name = deta.date;
     newData.number = deta.totalCars
     datagraph.push(newData)
-    console.log("test1",newData);
-    
+    console.log("test1", newData);
   })
 
-
-  const renderRealtime = () =>{
-
-   return realtime.map((v)=>{
-
+  const renderRealtime = () => {
+    realtime.sort((a, b) => new moment(a.time) - new moment(b.time))
+    return realtime.map((v) => {
       return (
-        
-        <div>
-     
-          <Row className="row">
+        <div className="sizedate">
+          <Row>
             <Col>{v.id}</Col>
             <Col>{v.numberOfcars}</Col>
-            <Col>{v.time}</Col>
+            <Col>{moment(v.time).format('hh:mm:ss')}</Col>
           </Row>
         </div>
       )
@@ -115,10 +93,9 @@ const Dashboard = () => {
   }
   return (
     <div className="animated fadeIn">
-      {/* //การ์ด */}
       <Row>
         <Col xs="12" sm="6" lg="2" md="6" xl="4">
-          <Card className="text-white bg-info" id="card">
+          <Card className="text-white bg-primary" id="card">
             <img src={car1} className="absolute" />
             <CardBody className="pb-0">
               <img src={car1} className="logo1" />
@@ -130,7 +107,7 @@ const Dashboard = () => {
           </Card>
         </Col>
         <Col xs="12" sm="6" lg="6" md="6" xl="4">
-          <Card className="text-white bg-primary" id="card">
+          <Card className="text-white bg-info" id="card">
             <img src={parking1} className="absolute" />
             <CardBody className="pb-0">
               <img src={parking1} className="logo2" />
@@ -167,7 +144,6 @@ const Dashboard = () => {
         </Col>
       </Row>
 
-      {/* กราฟ */}
       <Row>
         <Col>
           <Row>
@@ -177,62 +153,67 @@ const Dashboard = () => {
                 <Statistic value={data.length} className="satistic" />
                 <div className="price">
                   <img src={price} className="price" />
-                  <text>{data1[1].number}</text>
-                  <text>({data1[2].number})</text>
+                  <text>{dashboard[0].totalCars}</text>
+                  <text>({dashboard[0].totalCars})</text>
                 </div>
                 <LineChart width={900} height={200} data={datagraph}>
                   <Line dataKey="number" stroke="#8884d8" />
                   <CartesianGrid stroke="#ccc" />
-                  {/* <XAxis dataKey="time" />
-                    <YAxis dataKey="number" /> */}
+
                 </LineChart>
               </CardBody>
             </Card>
           </Row>
           <Row>
-            <Col>
-              <Card className="chart4">
-                <CardBody className="pb-0">
-                  <div>
-                    <RadialBarChart
-                      width={500}
-                      height={300}
-                      cx={140}
-                      cy={70}
-                      innerRadius={20}
-                      outerRadius={70}
-                      barSize={10}
-                      data={data3}
-                    >
-                      <RadialBar
-                        minAngle={15}
-                        label={{ position: "insideStart", fill: "#fff" }}
-                        background
-                        clockWise
-                        dataKey="uv"
-                      />
-                      <Legend
-                        iconSize={10}
-                        width={120}
-                        height={140}
-                        layout="vertical"
-                        verticalAlign="middle"
-                        wrapperStyle={style}
-                      />
-                    </RadialBarChart>
-                  </div>
-                </CardBody>
-              </Card>
-            </Col>
-            <Col>
-              <Card className="chart4">
-                <CardBody className="pb-0">
-                  <div className="chartline">
-                    <LineA data={data4} width={400} />
-                  </div>
-                </CardBody>
-              </Card>
-            </Col>
+            <div className="box-chart" >
+              <div className="item">
+                <Card className="chart4">
+                  <CardBody className="pb-0">
+                    <div>
+                      <RadialBarChart
+                        width={500}
+                        height={300}
+                        cx={140}
+                        cy={70}
+                        innerRadius={20}
+                        outerRadius={70}
+                        barSize={10}
+                        data={data3}
+                      >
+                        <RadialBar
+                          minAngle={15}
+                          label={{ position: "insideStart", fill: "#fff" }}
+                          background
+                          clockWise
+                          dataKey="uv"
+                        />
+                        <Legend
+                          iconSize={10}
+                          width={120}
+                          height={140}
+                          layout="vertical"
+                          verticalAlign="middle"
+                          wrapperStyle={style}
+                        />
+                      </RadialBarChart>
+                    </div>
+                  </CardBody>
+                </Card>
+              </div>
+              <div className="item item-right">
+                <Card className="chart4">
+                  <CardBody className="pb-0">
+                    <div className="chartline">
+                      <LineA data={data4} width={400} />
+                    </div>
+                  </CardBody>
+                </Card>
+              </div>
+
+
+            </div>
+
+
           </Row>
         </Col>
         <Col>
@@ -244,14 +225,14 @@ const Dashboard = () => {
                 <text>Movement</text>
                 <div>
                   <img src={car} className="rtcar" />
-                  <text id="car">{data2[0].value}</text>
+                  <text id="car">{dashboard[0].totalCars}</text>
                 </div>
                 <div>
                   <img src={parking} className="rtpark" />
-                  <text id="car">{data2[1].value}</text>
+                  <text id="car">{dashboard[0].carParking}</text>
                 </div>
               </div>
-             
+
               <PieChart width={250} height={200}>
                 <Pie
                   data={data2}
@@ -268,7 +249,7 @@ const Dashboard = () => {
                   }
                 </Pie>
               </PieChart>
-            </CardBody> 
+            </CardBody>
             {renderRealtime()}
           </Card>
         </Col>
