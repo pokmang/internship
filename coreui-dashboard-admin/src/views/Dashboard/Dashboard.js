@@ -1,41 +1,20 @@
-import React, { PureComponent,useEffect, useState } from "react";
-import { Statistic, Col, Button } from "antd";
+import React, { useEffect, useState } from "react";
+import { Statistic, Col } from "antd";
 import { Line as LineA } from "react-chartjs-2";
-import {
-  ArrowUpOutlined,
-  ArrowDownOutlined,
-  CaretUpOutlined,
-} from "@ant-design/icons";
-import {
-  LineChart,
-  Line,
-  CartesianGrid,
-  XAxis,
-  YAxis,
-  Sector,
-  PieChart,
-  Pie,
-  Cell,
-  RadialBarChart,
-  RadialBar,
-  Legend,
-} from "recharts";
+import {LineChart,Line,CartesianGrid,PieChart,Pie,Cell,RadialBarChart,RadialBar,Legend,} from "recharts";
 import car1 from "../../assets/img/card/car1.png";
 import delivery1 from "../../assets/img/card/delivery1.png";
 import parking1 from "../../assets/img/card/parking1.png";
 import vip1 from "../../assets/img/card/vip1.png";
-import car2 from "../../assets/img/card/car2.png";
-import delivery2 from "../../assets/img/card/delivery2.png";
-import parking2 from "../../assets/img/card/parking2.png";
-import vip2 from "../../assets/img/card/vip2.png";
 import price from "../../assets/img/icon/price.png";
 import car from "../../assets/img/icon/car.png";
 import parking from "../../assets/img/icon/parking.png";
-import { Card, CardBody, Row, CardColumns } from "reactstrap";
-import { CustomTooltips } from "@coreui/coreui-plugin-chartjs-custom-tooltips";
+import { Card, CardBody, Row } from "reactstrap";
 import "./card.css";
 import "./chart.css";
-import axios from 'axios'
+import axios from "axios";
+
+
 var moment = require("moment"); // require
 const time = moment().format("DD MMMM YYYY");
 //statisce
@@ -53,32 +32,12 @@ const data2 = [
 ];
 
 const data3 = [
-  {
-    name: "car",
-    uv: 31.47,
-    pv: 2400,
-    fill: "#8884d8",
-  },
-  {
-    name: "Car parking",
-    uv: 26.69,
-    pv: 4567,
-    fill: "#83a6ed",
-  },
-  {
-    name: "Car VIP",
-    uv: 15.69,
-    pv: 1398,
-    fill: "#8dd1e1",
-  },
+  { name: "car",        uv: 31.47,pv: 2400,fill: "#20A8D8"},
+  { name: "Car parking",uv: 26.69,pv: 4567,fill: "#FFC107"},
+  { name: "Car VIP",    uv: 15.69,pv: 1398,fill: "#F86C6B"},
 ];
-const style = {
-  top: 0,
-  left: 350,
-  lineHeight: "24px",
-};
-
-const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
+const style = {top: 15,left: 250,lineHeight: "24px",};
+const COLORS = ["#63C2DE", "#20A8D8"];
 
 const data4 = {
   labels: ["10.00", "10.30", "11.30", "12.00", "12.02", "12.20"],
@@ -100,101 +59,109 @@ const data4 = {
 };
 
 const Dashboard = () => {
-  const [dashboard , setDashboard] = useState({})
-  const [realtime , setRealtime] = useState([])
-  const [data , setData] = useState([])
+  const [dashboard, setDashboard] = useState([{}]);
+  const [realtime, setRealtime] = useState([]);
+  const [data, setData] = useState([]);
+  const [graph, setGraph] = useState([{}])
 
-  useEffect(()=>{
-    getDashboard()
-  },[])
+  useEffect(() => {
+    getDashboard();
+  }, []);
 
-
-  const getDashboard = async ()=>{
-    let dashboard = await axios.get('http://localhost:3000/dashboard/getDashboard')
-    setDashboard(dashboard.data)
-    let realtime = await axios.get('http://localhost:3000/dashboard/getRealtime')
-    setRealtime(realtime.data)
-    let data = await axios.get('http://localhost:3000/dashboard/getData')
-    setData(data.data)
-  }
-  console.log("d",dashboard);
-  console.log("r",realtime);
-  console.log("dd",data);
+  const getDashboard = async () => {
+    let dashboard = await axios.get("http://localhost:8000/dashboard/getDashboard");
+    setDashboard(dashboard.data);
+    let realtime = await axios.get("http://localhost:8000/dashboard/getRealtime");
+    setRealtime(realtime.data);
+    let data = await axios.get("http://localhost:8000/dashboard/getData");
+    setData(data.data);
+    let graph = await axios.get("http://localhost:8000/dashboard/getGraph")
+    setGraph(graph.data)
+  };
+  console.log("dashboard", dashboard);
+  console.log("realtime", realtime);
+  console.log("data", data);
+  console.log("graph",graph);
   
+  const datagraph = []
+  console.log("test2",datagraph);
+  
+  graph.forEach(deta => {
+    const newData = {}
+    newData.name = deta.date;
+    newData.number = deta.totalCars
+    datagraph.push(newData)
+    console.log("test1",newData);
+    
+  })
 
 
+  const renderRealtime = () =>{
 
+   return realtime.map((v)=>{
 
-  // const renderRealtime = () =>{
-   
-   
-  //  return realtime.map((v)=>{
-      
-  //     return (
-  //       <div>
-  //         <Row>
-  //           <Col>{v.id}</Col>
-  //           <Col>{v.numberOfcars}</Col>
-  //           <Col>{v.time}</Col>
-  //         </Row>   
-  //       </div>
-  //     )
-  //   })
-  // }
+      return (
+        
+        <div>
+     
+          <Row className="row">
+            <Col>{v.id}</Col>
+            <Col>{v.numberOfcars}</Col>
+            <Col>{v.time}</Col>
+          </Row>
+        </div>
+      )
+    })
+  }
   return (
     <div className="animated fadeIn">
       {/* //การ์ด */}
       <Row>
         <Col xs="12" sm="6" lg="2" md="6" xl="4">
           <Card className="text-white bg-info" id="card">
-            <img src={car2} className="absolute" />
+            <img src={car1} className="absolute" />
             <CardBody className="pb-0">
               <img src={car1} className="logo1" />
-
               <span className="textcard1">Number of cars</span>
             </CardBody>
             <div className="chart-wrapper mx-3" style={{ height: "70px" }}>
-              <h4 className="number">{dashboard.totalCars}</h4>
+              <h4 className="number">{dashboard[0].totalCars}</h4>
             </div>
           </Card>
         </Col>
-
         <Col xs="12" sm="6" lg="6" md="6" xl="4">
           <Card className="text-white bg-primary" id="card">
-            <img src={parking2} className="absolute" />
+            <img src={parking1} className="absolute" />
             <CardBody className="pb-0">
               <img src={parking1} className="logo2" />
               <span className="textcard2">Car Parking</span>
             </CardBody>
             <div className="chart-wrapper mx-3" style={{ height: "70px" }}>
-  <h4 className="number">{dashboard.carParking}</h4>
+              <h4 className="number">{dashboard[0].carParking}</h4>
             </div>
           </Card>
         </Col>
-
         <Col xs="12" sm="6" lg="6" md="6" xl="4">
           <Card className="text-white bg-warning" id="card">
-            <img src={delivery2} className="absolute" />
+            <img src={delivery1} className="absolute" />
             <CardBody className="pb-0">
               <img src={delivery1} className="logo3" />
               <span className="textcard3">Delivery Parking</span>
             </CardBody>
             <div className="chart-wrapper mx-3" style={{ height: "70px" }}>
-              <h4 className="number">{dashboard.deliveryParking}</h4>
+              <h4 className="number">{dashboard[0].deliveryParking}</h4>
             </div>
           </Card>
         </Col>
-
         <Col xs="12" sm="6" lg="6" md="6" xl="4">
           <Card className="text-white bg-danger" id="card">
-            <img src={vip2} className="absolute" />
+            <img src={vip1} className="absolute" />
             <CardBody className="pb-0">
               <img src={vip1} className="logo4" />
-
               <span className="textcard4">Car VIP</span>
             </CardBody>
             <div className="chart-wrapper mx-3" style={{ height: "70px" }}>
-              <h4 className="number">{dashboard.carVIP}</h4>
+              <h4 className="number">{dashboard[0].carVIP}</h4>
             </div>
           </Card>
         </Col>
@@ -210,10 +177,10 @@ const Dashboard = () => {
                 <Statistic value={data.length} className="satistic" />
                 <div className="price">
                   <img src={price} className="price" />
-                  <spen  >{data1[1].number}</spen>
-                  <spen>({data1[2].number})</spen>
+                  <text>{data1[1].number}</text>
+                  <text>({data1[2].number})</text>
                 </div>
-                <LineChart width={900} height={200} data={data1}>
+                <LineChart width={900} height={200} data={datagraph}>
                   <Line dataKey="number" stroke="#8884d8" />
                   <CartesianGrid stroke="#ccc" />
                   {/* <XAxis dataKey="time" />
@@ -271,47 +238,41 @@ const Dashboard = () => {
         <Col>
           <Card id="chrat2">
             <CardBody className="pb-0">
-              <h5>Real time</h5>
-              <small>{time}</small>
+              <h3>Real time</h3>
+              <h6>{time}</h6>
               <div className="move">
-                <spen>Movement</spen>
+                <text>Movement</text>
                 <div>
                   <img src={car} className="rtcar" />
-                  <spen id="car">{data2[0].value}</spen>
+                  <text id="car">{data2[0].value}</text>
                 </div>
                 <div>
                   <img src={parking} className="rtpark" />
-                  <spen id="car">{data2[1].value}</spen>
+                  <text id="car">{data2[1].value}</text>
                 </div>
               </div>
-              {/* {renderRealtime()} */}
-              <PieChart width={700} height={900}>
+             
+              <PieChart width={250} height={200}>
                 <Pie
                   data={data2}
                   cx={120}
-                  cy={200}
+                  cy={95}
                   innerRadius={60}
                   outerRadius={70}
                   fill="#8884d8"
                   paddingAngle={5}
                   dataKey="value"
                 >
-                  {data.map((entry, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={COLORS[index % COLORS.length]}
-                    />
-                  ))}
+                  {
+                    data.map((entry, index) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)
+                  }
                 </Pie>
               </PieChart>
-             
-            </CardBody>
-            
+            </CardBody> 
+            {renderRealtime()}
           </Card>
-          
         </Col>
       </Row>
-     
     </div>
   );
 };
